@@ -1,0 +1,12 @@
+message TestRequestBody
+{
+	optional string user_id = 1;
+	optional uint32 operation = 11;
+	optional string reason = 12;
+};
+
+message TestResponseBody
+{
+	optional string result = 11;
+};
+

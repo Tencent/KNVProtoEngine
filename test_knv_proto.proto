@@ -1,0 +1,67 @@
+
+message TestRequestBody
+{
+	optional uint32 operation = 11;
+	optional string reason = 12;
+};
+
+message TestResponseBody
+{
+	optional string result = 11;
+};
+
+
+
+message KnvHeader
+{
+	optional bytes bytes_user_id = 1;       //user id
+	optional uint32 uint32_command = 2;         //command
+	optional uint32 uint32_sub_command = 3;    //sub command
+	optional uint64 uint64_seq = 4;             //request sequence
+	optional uint32 uint64_to_user_id = 5;      //whose data is to be requested
+	optional uint32 uint32_result = 7;          //operation result, for response packet only
+	optional string str_error_msg = 8;          //error message if result if not zero
+};
+
+
+message KnvRequestPacket
+{
+	optional KnvHeader head = 2989;
+	optional bytes msg_req_body = 3501; // request packet body, write your own message to replace bytes
+};
+
+message KnvResponsePacket
+{
+	optional KnvHeader head = 2989;
+	optional bytes msg_rsp_body = 3501; // response packet body, write your own message to replace bytes
+};
+
+//Example for using KnvProtocol
+// KnvRequestPackager req;
+// req.mutable_packet()->mutable_head()->set_bytes_from_openid(...);
+// req.mutable_packet()->mutable_head()->set_uint32_command(0x5e1);
+// req.mutable_packet()->mutable_head()->set_uint32_service_type(1);
+// ...
+// string s;
+// req.SerializeToString(&s);
+// sendto(sock_fd, s.data(), s.length(), ...);
+message KnvRequestPackager
+{
+	required KnvRequestPacket packet = 3507; // the first 3 bytes: 9A DB 01
+};
+
+//Knv response packet
+// char buf[65536];
+// int length = recvfrom(sock_fd, buf, sizeof(buf), ...);
+// if(length>0)
+// {
+//     KnvResponsePackager rsp;
+//     rsp.ParseFromArray(buf, length);
+//     // process response packet
+// }
+message KnvResponsePackager
+{
+	required KnvResponsePacket packet = 3507; // the first 3 bytes: 9A DB 01
+};
+
+
