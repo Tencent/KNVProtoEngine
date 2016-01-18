@@ -77,8 +77,8 @@ req->Serialize(buffer, &len, false); // not encoding header tag
 
 KnvNode::Delete(req); // you should delete req when it is no longer in use
 
-// Now buffer contents the same data as TestRequestBody.SerialzeToString()
-// Next, write your own code that handles remote procedure call, we assume that buffer contents the whole response packet
+// Now buffer contains the same data as TestRequestBody.SerialzeToString()
+// Next, write your own code that handles remote procedure call, we assume that buffer contains the whole response packet
 
 string rsp_body(buffer, len);
 KnvNode *rsp = KnvNode::NewFromMessage(rsp_body);
