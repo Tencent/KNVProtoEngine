@@ -1,8 +1,26 @@
  KNV(Key-N-Value) is a protocol engine for manipulating protocol data without knowing the detail meaning of the content.
+ 
+ Request Tree
+ A network invocation can be treated as an operation performed on a set of objects (or sub-objects), thus we can denote the invocation as:
+         Network invocation = (Operation, Data, Path)
+ For example, I have all my classmates' information stored on a remote server, and I wish to change my classmate A's remark to Alice and B's to Bob, my invocation will be like this:
+ 	Operation = Set value
+ 	Data = {Alice, Bob}
+ 	Path = I->Classmates->{A,B}->Remark
+ Using traditional method, the protocol designer needs to take classmate and remark into account, but if you are implementing a general sotrage server, you probably do not like this.
+ Many known storage servers use Key-Value (Memcached) or complicated data structures (Redis) to implement a generalized method, but still have many tradeoffs, like:
+     1) Data structures can not be whatever you like;
+     2) Strage server are very complicated for supporting 2 or more level of sub nodes.
+ 
+ KNV solves these problems completely by introducing the concept of "Request Tree".
+ A request tree is the directories of all requested sub-objects linked together. Given a request tree, the storage server knowns exactly what sub-objects are to be operated on, whitout knowing the meaning of them.
+
+
  KNV serves for 3 main purposes:
   1) As a fast protocol engine. KNV can manipulate part of PB(Google's Protocol Buffers) data without decoding all the contents, and is highly optimized for raw handling of data.
   2) As a general proxy server.
   3) As a general data storage server.
+
 
  Key-N-Value philosophy:
   A KNV tree is common PB tree, except that each node is identified by Tag + Key.
@@ -15,7 +33,7 @@
 
 
 Modification history
- 2013-10-12	  Yu Zhenshen       Created
+ 2013-10-12   Yu Zhenshen       Created
  2013-11-04   Yu Zhenshen       Add parent pointer and eval_size to optimize folding
  2014-01-17   Yu Zhenshen       Use mem_pool for dynamic memory management
  2014-01-28   Yu Zhenshen       Use KnvHt to optimize hash initialization
