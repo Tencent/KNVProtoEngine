@@ -4,19 +4,19 @@
  
  As we know, Key-Value systems such as memcached is very inconvenient, for examples:
  
-  1) If you wish to read a sub-field in value, you need to read the whole value and extract it by your self;
+ ---- If you wish to read a sub-field in value, you need to read the whole value and extract it by your self;
 
-  2) If data can be modified by different clients, they have to avoid write-conflict by themselves, e.g., by undertaking an optimistic locking;
+ ---- If data can be modified by different clients, they have to avoid write-conflict by themselves, e.g., by undertaking an optimistic locking;
 
-  3) If you want to increase a field in value, you still need to read and write all value, consuming a lot of network resources.
+ ---- If you want to increase a field in value, you still need to read and write all value, consuming a lot of network resources.
 
  To solve these problems, Redis comes to help by supporting much more complicated data structures. But redis still has many difficulties:
  
-  1) Each data structure has its own implementation, making it diffcult to add more data structures, thus the end-users have to FIT their data model to existing data structures;
+ ---- Each data structure has its own implementation, making it diffcult to add more data structures, thus the end-users have to FIT their data model to existing data structures;
 
-  2) Once a data structure is used, it is almost impossible to change to another one;
+ ---- Once a data structure is used, it is almost impossible to change to another one;
 
-  ... ...
+ ---- ... ...
 
  OK, here comes KNV, all the above difficulties are solved completely.
  
