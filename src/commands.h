@@ -30,17 +30,11 @@ namespace knv
 	const char *GetErrorCodeName(uint64_t errcode);
 
 
-	extern map<uint64_t, string> g_knv_cmd_maps;
-	extern map<uint64_t, string> g_knv_errcode_maps;
-
 	// constructor class for internal use
 	class KnvCommandRegisterer
 	{
 		public:
-			KnvCommandRegisterer(const char *desc, uint64_t val)
-			{
-				g_knv_cmd_maps[val] = desc;
-			}
+			KnvCommandRegisterer(const char *desc, uint64_t val);
 			~KnvCommandRegisterer() {}
 	};
 
@@ -52,10 +46,7 @@ namespace knv
 	class KnvErrorCodeRegisterer
 	{
 		public:
-			KnvErrorCodeRegisterer(const char *desc, uint64_t val)
-			{
-				g_knv_errcode_maps[val] = desc;
-			}
+			KnvErrorCodeRegisterer(const char *desc, uint64_t val);
 			~KnvErrorCodeRegisterer() {}
 	};
 

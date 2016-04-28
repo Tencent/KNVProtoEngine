@@ -7,7 +7,7 @@ Unless required by applicable law or agreed to in writing, software distributed 
 */
 
 /*
- * commands.h
+ * commands.cc
  * Mappings for application specific commands
  *
  * 2013-10-23	Created
@@ -17,6 +17,8 @@ Unless required by applicable law or agreed to in writing, software distributed 
 #include <string>
 #include <map>
 #include <string.h>
+#include "commands.h"
+
 using namespace std;
 
 #define uint_to_hstr(ival, str, len) \
@@ -31,13 +33,13 @@ using namespace std;
 
 namespace knv
 {
-	map<uint64_t, string> g_knv_cmd_maps;
-	map<uint64_t, string> g_knv_errcode_maps;
+	static map<uint64_t, string> *g_knv_cmd_maps = NULL;
+	static map<uint64_t, string> *g_knv_errcode_maps = NULL;
 
 	const char *GetCmdName(uint64_t c)
 	{
-		const map<uint64_t, string>::iterator it = g_knv_cmd_maps.find(c);
-		if(it==g_knv_cmd_maps.end())
+		map<uint64_t, string>::const_iterator it;
+		if(g_knv_cmd_maps==NULL || (it=g_knv_cmd_maps->find(c))==g_knv_cmd_maps->end())
 		{
 			static __thread char cmd_name[128];
 			uint_to_hstr(c,cmd_name,sizeof(cmd_name)); strncat(cmd_name, ":UnknownCommand", sizeof(cmd_name));
@@ -48,8 +50,8 @@ namespace knv
 
 	const char *GetErrorCodeName(uint64_t c)
 	{
-		const map<uint64_t, string>::iterator it = g_knv_errcode_maps.find(c);
-		if(it==g_knv_errcode_maps.end())
+		map<uint64_t, string>::const_iterator it;
+		if(g_knv_errcode_maps==NULL || (it=g_knv_errcode_maps->find(c))==g_knv_errcode_maps->end())
 		{
 			static __thread char code_name[128];
 			uint_to_hstr(c,code_name,sizeof(code_name)); strncat(code_name, ":UnknownErrorCode", sizeof(code_name));
@@ -58,6 +60,38 @@ namespace knv
 		return it->second.c_str();
 	}
 
+	KnvCommandRegisterer::KnvCommandRegisterer(const char *desc, uint64_t val)
+	{
+		static map<uint64_t, string> knv_cmd_maps;
+		g_knv_cmd_maps = &knv_cmd_maps;
+
+		map<uint64_t, string>::iterator it = knv_cmd_maps.find(val);
+		if(it==knv_cmd_maps.end())
+		{
+			knv_cmd_maps.insert(make_pair(val, string(desc)));
+		}
+		else
+		{
+			it->second = desc;
+		}
+	//	knv_cmd_maps[val] = desc;
+	}
+
+	KnvErrorCodeRegisterer::KnvErrorCodeRegisterer(const char *desc, uint64_t val)
+	{
+		static map<uint64_t, string> knv_errcode_maps;
+		g_knv_errcode_maps = &knv_errcode_maps;
+		map<uint64_t, string>::iterator it = knv_errcode_maps.find(val);
+		if(it==knv_errcode_maps.end())
+		{
+			knv_errcode_maps.insert(make_pair(val, string(desc)));
+		}
+		else
+		{
+			it->second = desc;
+		}
+	//	knv_errcode_maps[val] = desc;
+	}
 
 };
 
